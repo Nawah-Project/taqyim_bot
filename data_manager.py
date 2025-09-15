@@ -1,7 +1,7 @@
 import sqlite3
 import os
 from dotenv import load_dotenv
-
+import logging
 load_dotenv()
 DB = os.getenv("DB")
 
@@ -53,13 +53,13 @@ class Member_State:
         UPDATE member_state
         SET missed = ? 
         WHERE 
-        user_id = ? AND chat_id = ?
+        member_id = ?
         """, (0, member_id))
         self.con.commit()
 
     def weekly_missed_update(self):
         """To beggin a new week"""
-        res = self.cur.execute("SELECT missed, user_id FROM member_state")
+        res = self.cur.execute("SELECT missed, member_id FROM member_state")
         r = res.fetchall()
         for user in range(len(r)):
             new_missed = r[user][0] + 1
@@ -74,6 +74,24 @@ class Member_State:
     
     def get_missed(self,member_id):
         """To get the member missed score"""
-        missed = self.cur.execute("SELECT missed FROM user_state WHERE user_id = ? AND chat_id = ?", (member_id,))
+        missed = self.cur.execute("SELECT missed FROM member_state WHERE member_id = ?", (member_id,))
         user_missed = missed.fetchone()[0]
         return user_missed
+    
+    def get_name(self,member_id):
+        """To get the member name"""
+        name = self.cur.execute("SELECT name FROM member_state WHERE member_id = ?", (member_id,))
+        member_name = name.fetchone()[0]
+        return member_name
+
+    def update_member_name(self,member_id,name):
+        """To update the member name"""
+      
+        self.cur.execute("""
+        UPDATE member_state
+        SET name = ? 
+        WHERE 
+        member_id = ?
+        """, (name, member_id))
+        self.con.commit()
+        logging.info(f"update_member_name done new name{name}")
