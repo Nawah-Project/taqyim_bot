@@ -1,6 +1,5 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from data_manager import Member_State as MS
 from utils import is_admin
 import  datetime
 from zoneinfo import ZoneInfo

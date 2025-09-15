@@ -32,28 +32,33 @@ async def monitoring_topic(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     
     monitoring_topic_id = 12
     if update.message.message_thread_id is monitoring_topic_id:
-        await submit_achievement(update, context)
+        await submit_doc(update, context)
     
 
 async def new_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     member_id = update.effective_user.id
     name = update.effective_user.first_name + " " + update.effective_user.last_name
-    MS().check_member_id(member_id, name)
+    MS.check_member_id(member_id, name)
     
-async def submit_achievement(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def submit_doc(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     member_id = update.effective_user.id
-    
+    first_name ="" if update.effective_user.first_name ==  None else update.effective_user.first_name
+    last_name = "" if update.effective_user.last_name ==  None else update.effective_user.last_name
+
+    name = f"{first_name} {last_name}"
    
     if Documentation().check_documentation(update.message.text):
-        if MS().get_missed(member_id) > 0:
+        if MS.get_name(member_id) == 'name':
+         MS.update_member_name(member_id,name)
+        if MS.get_missed(member_id) > 0:
             
-            MS().update_member_missed(member_id)
-           
+            
+
             text = update.message.text
-            name = update.effective_user.first_name + " " + update.effective_user.last_name
+            
             massage = create_massage(name,text)
             doc_register(DOCUMENT_ID,massage)
-
+            MS.update_member_missed(member_id)
             await update.message.delete()
         else:
             await update.message.reply_text(
