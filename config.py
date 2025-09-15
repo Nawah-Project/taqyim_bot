@@ -7,7 +7,10 @@ from dotenv import load_dotenv
 load_dotenv()
 CREDS = os.getenv("CREDS")
 TOKEN = os.getenv("TOKEN")
-SCOPES = os.getenv("SCOPES")
+SCOPE = os.getenv("SCOPES")
+SCOPES = []
+SCOPES.append(SCOPE)
+print(SCOPES)
 class Configuration:
 
     def __init__(self):
