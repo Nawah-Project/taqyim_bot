@@ -51,19 +51,16 @@ async def submit_doc(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         if MS.get_name(member_id) == 'name':
          MS.update_member_name(member_id,name)
         if MS.get_missed(member_id) > 0:
-            
-            
-
-            text = update.message.text
-            
+            text = update.message.text        
             massage = create_massage(name,text)
             doc_register(DOCUMENT_ID,massage)
             MS.update_member_missed(member_id)
-            await update.message.delete()
+            await update.message.reply_text(
+                "📝  تم تسجيل توثيقك لهذا الأسبوع.\n")
         else:
             await update.message.reply_text(
                 "⚠️ لقد سجّلت توثيقك هذا الأسبوع بالفعل.\n"
-                "⏳ لا يمكن تسجيل أكثر من مرة في نفس الأسبوع."
+                "⏳ يمكنك إضافة توثيق جديد مع بداية الأسبوع القادم."
             )
     else:
         await update.message.reply_text(
